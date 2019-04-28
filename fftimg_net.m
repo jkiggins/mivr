@@ -1,9 +1,9 @@
 % Convolutional Neural Network Approach
 
-% delete(gcp('nocreate'))
+delete(gcp('nocreate'))
 close all ; clear all;
 
-% pool = parpool
+pool = parpool
 
 load('fftimg_xy');
 
@@ -32,7 +32,7 @@ for i = 1:numberOfFolds
     yTrain = y(:, trainIndex);
 
     net = net_init([500 200], 300);
-    [net,tr] = train(net, xTrain, yTrain, 'useGpu','yes');  %return neural net and a training record
+    [net,tr] = train(net, xTrain, yTrain, 'useParallel','yes');  %return neural net and a training record
     
     yTestPred = net(xTest, 'useParallel','yes');
     predictionLabels(testIndex) = vec2ind(yTestPred);
