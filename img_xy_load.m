@@ -10,7 +10,7 @@ words = [
 ];
 num_samples = 104165;
 
-x = zeros(1001, num_samples);
+x = zeros(864, num_samples);
 y = zeros(length(words), num_samples);
 file_paths = string(zeros(1, num_samples));
 
@@ -23,8 +23,17 @@ for i = 1:length(words)
     for j = 1:length(audiofiles)
         % read in audio file
         fpath = sprintf("%s/%s", audiofiles(j).folder, audiofiles(j).name);
-        [a f] = img_audio(fpath, 4000, 4, 500);
         
+        [a fs] = audioread(fpath);
+        a = abs(spectrogram(a, 167));
+        rsz_row = floor(size(a,1)/4) * 4;
+        rsz_col = floor(size(a,2)/4) * 4;
+        a = a(1:rsz_row, 1:rsz_col);
+        a = sepblockfun(a,[4,4],'max');
+        a = reshape(a, numel(a), 1);
+        a = (a - min(a)) ./ (max(a) - min(a));
+        
+       
         try
             x(1:size(a, 1), sample) = a;
             file_paths(1, sample) = fpath;

@@ -31,10 +31,10 @@ for i = 1:numberOfFolds
     yTest = y(:, testIndex);
     yTrain = y(:, trainIndex);
 
-    net = net_init(500, 1000);
-    [net,tr] = train(net, xTrain, yTrain, 'useGPU','yes');  %return neural net and a training record
+    net = net_init([500 200], 300);
+    [net,tr] = train(net, xTrain, yTrain, 'useGpu','yes');  %return neural net and a training record
     
-    yTestPred = net(xTest, 'useGPU','yes');
+    yTestPred = net(xTest, 'useParallel','yes');
     predictionLabels(testIndex) = vec2ind(yTestPred);
 end
 
